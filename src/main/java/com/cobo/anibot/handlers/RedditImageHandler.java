@@ -25,7 +25,6 @@ package com.cobo.anibot.handlers;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 

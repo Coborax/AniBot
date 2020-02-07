@@ -32,7 +32,8 @@ import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 /**
  *
@@ -43,6 +44,9 @@ public class TwitterBot extends Bot {
     private Twitter twitterClient;
     private ImageHandler imageHandler;
     
+    private AccessToken accessToken;
+    private RequestToken requestToken;
+    
     private final long postDelay = 3600000;
     private long nextPostTime;
     
@@ -51,6 +55,7 @@ public class TwitterBot extends Bot {
         
         imageHandler = new RedditImageHandler("https://www.reddit.com/r/awwnime.json");
         nextPostTime = System.currentTimeMillis();
+        twitterClient = TwitterFactory.getSingleton();
     }
     
     public TwitterBot(ImageHandler imageHandler) {
@@ -62,9 +67,15 @@ public class TwitterBot extends Bot {
     
     @Override
     public void handleLoop() {
-        if (twitterClient == null) {
-            setRunning(false);
+        
+        if (accessToken == null) {
             return;
+        }
+        
+        try {
+            twitterClient.verifyCredentials();
+        } catch (TwitterException ex) {
+            twitterClient.setOAuthAccessToken(accessToken);
         }
         
         long currentTime = System.currentTimeMillis();
@@ -75,23 +86,29 @@ public class TwitterBot extends Bot {
         }
     }
     
-    public void connectToTwitter(String ck, String cs, String at, String ats) {
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-          .setOAuthConsumerKey(ck)
-          .setOAuthConsumerSecret(cs)
-          .setOAuthAccessToken(at)
-          .setOAuthAccessTokenSecret(ats);
-       
-        TwitterFactory tf = new TwitterFactory(cb.build());
-        
-        twitterClient = tf.getInstance();
+    public void connectToTwitter(String pin) {
         
         try {
-            twitterClient.verifyCredentials();
-        } catch (TwitterException e) {
-            twitterClient = null;
+            accessToken = twitterClient.getOAuthAccessToken(requestToken, pin);
+        } catch (TwitterException ex) {
+            Logger.getLogger(TwitterBot.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        requestToken = null;
+        
+    }
+    
+    public String getAuthUrl() {
+        
+        try {
+            requestToken = twitterClient.getOAuthRequestToken();
+            return requestToken.getAuthorizationURL();
+        } catch (TwitterException ex) {
+            Logger.getLogger(TwitterBot.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return "Could not get auth link...";
+        
     }
     
     private void postTweet() {
