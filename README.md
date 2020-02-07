@@ -1,9 +1,13 @@
 # AniBot
-A Twitter bot that shares art.
+A Twitter bot that shares art. A live version can be found [here](https://twitter.com/AniCuties)
 
 ## Project status / Contributing
-This is a school project, so developmen may/may not continue.
+This is a school project, so development may/may not continue.
 Feel free to fork the project, or submit a pull request with changes.
+
+## TODO List
+- Save user auth between sessions
+- More settings
 
 ## Authors and acknowledgment
 This project is created by: [@Coborax.](https://github.com/Coborax) (Mikkel L. Mouridsen)
