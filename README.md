@@ -7,6 +7,8 @@ Feel free to fork the project, or submit a pull request with changes.
 
 ## TODO List
 - Save user auth between sessions
+- Pixiv image handler
+- Retweet art from other twitter accounts
 - More settings
 
 ## Authors and acknowledgment
