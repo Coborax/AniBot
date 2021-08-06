@@ -1,5 +1,5 @@
 # AniBot
-A Twitter bot that shares art. A live version can be found [here](https://twitter.com/AniCuties)
+A Twitter bot that shares art.
 
 ## Project status / Contributing
 This is a school project, so development may/may not continue.
